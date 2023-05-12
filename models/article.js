@@ -6,7 +6,7 @@ const commentSchema = new Schema(
   {
     text: {
       type: String,
-      required: true
+      // required: true
     },
     author: { type: Schema.Types.ObjectId, ref: 'Profile' }
   },
@@ -17,36 +17,41 @@ const articleSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      // required: true,
     },
-    source: {
+    creator: {
+      type: [String],
+      // required: true,
+      default: ''
+    },
+    description: {
       type: String,
-      required: true,
+      // required: true,
       default: ''
     },
     content: {
       type: String,
-      required: true,
+      // required: true,
       default: ''
     },
-    date: { 
+    pubDate: { 
       type: String,
-      required: true,
+      // required: true,
       default: '' 
     },
     category: { 
-      type: String,
-      required: true,
+      type: [String],
+      // required: true,
       default: '' 
     },
     language: { 
       type: String,
-      required: true,
+      // required: true,
       default: '' 
     },
-    image: { 
+    image_url: { 
       type: String,
-      required: true,
+      // required: true,
       default: '' 
     },
     comments: [commentSchema]
