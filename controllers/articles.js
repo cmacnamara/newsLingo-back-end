@@ -34,7 +34,58 @@ async function index(req,res) {
   }
 }
 
+// all new below this point
+
+async function show(req, res) {
+  try {
+    const article = await Article.findById(req.params.articleId)
+      //.populate('comments.author') 
+    res.status(200).json(article)
+  } catch(err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+async function update(req, res) {
+  try {
+    const xxxx = await 
+    res.status.json(article)
+  } catch(err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+async function createComment(req, res) {
+  try {
+    const xxxx = await 
+    res.status.json(article)
+  } catch(err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+async function deleteComment(req, res) {
+  try {
+    const xxxx = await 
+    res.status.json(article)
+  } catch(err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+async function createFavoriteWord(req, res) {
+  try {
+    const xxxx = await 
+    res.status.json(article)
+  } catch(err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
+
 export {
   index,
   create,
+  show,
 }
