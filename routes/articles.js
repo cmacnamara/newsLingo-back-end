@@ -9,7 +9,9 @@ const router = Router()
 
 // ========= Protected Routes ========= 
 router.use(decodeUserFromToken)
-router.get('/', checkAuth, articlesCtrl.index)
-router.post('/', articlesCtrl.create)
+
+//localhost:3001/api/articles
+router.get('/',  articlesCtrl.index)  //checkAuth removed -----remember to add back once front end is built
+router.post('/', articlesCtrl.create) //checkAuth removed -----remember to add back once front end is built
 
 export { router }
