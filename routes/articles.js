@@ -14,5 +14,6 @@ router.use(decodeUserFromToken)
 router.get('/', checkAuth, articlesCtrl.index)  
 router.get('/:articleId', checkAuth, articlesCtrl.show)
 router.post('/', checkAuth, articlesCtrl.create)
+router.post('/:articleId', checkAuth, articlesCtrl.createComment)
 
 export { router }

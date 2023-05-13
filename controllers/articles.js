@@ -46,16 +46,25 @@ async function show(req, res) {
     res.status(500).json(err)
   }
 }
-async function update(req, res) {
+async function createComment(req, res) { //untested.... don't have req.body
   try {
-    const xxxx = await 
+    req.body.author = req.user.profile
+    const article = await Article.findById(req.params.articleId)
+    article.comments.push(req.body) 
     res.status.json(article)
+    await article.save()
+
+    const newComment = article.comments[article.comments - 1]
+    const profile = await Profile.findById(req.user.profile)
+    newComment.author = profile
+
+    res.status(201).json(newComment)
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
   }
 }
-async function createComment(req, res) {
+async function update(req, res) {
   try {
     const xxxx = await 
     res.status.json(article)
@@ -88,4 +97,5 @@ export {
   index,
   create,
   show,
+  createComment,
 }
