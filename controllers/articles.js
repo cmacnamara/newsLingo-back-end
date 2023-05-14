@@ -4,11 +4,17 @@ import { Profile } from "../models/profile.js"
 
 async function create(req,res) {
   try {
-    const apiResponse = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEWS_API_KEY}&language=en`)
+    const apiResponse = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEWS_API_KEY}&language=es`)
     console.log("api response: ", apiResponse);
     const articleData = await apiResponse.json()
-    console.log('articleData ', apiResponse);
-    const articles = await Article.create(articleData.results.filter((article, idx) => idx < 20))
+    console.log('articleData ', articleData);
+
+    //Filter response with only articles that have a creator and image
+    const filteredArticles = articleData.results.filter(article => (
+      article.creator && article.image_url
+    ))
+    console.log('Filtered articles', filteredArticles);
+    const articles = await Article.create(filteredArticles.filter((article, idx) => idx < 20))
     res.status(200).json(articles)
   } catch (error) {
     console.log(error);

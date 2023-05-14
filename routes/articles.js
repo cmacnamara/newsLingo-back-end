@@ -13,7 +13,7 @@ router.use(decodeUserFromToken)
 //localhost:3001/api/articles
 router.get('/', checkAuth, articlesCtrl.index)  
 router.get('/:articleId', checkAuth, articlesCtrl.show)
-router.post('/', checkAuth, articlesCtrl.create)
+router.post('/', articlesCtrl.create)
 router.post('/:articleId/comments', checkAuth, articlesCtrl.createComment)
 router.put('/:articleId/comments/:commentId', checkAuth, articlesCtrl.updateComment)
 router.delete('/:articleId/comments/:commentId', checkAuth, articlesCtrl.deleteComment)
