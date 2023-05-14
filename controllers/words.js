@@ -54,9 +54,21 @@ async function deleteWord(req, res) {
   }
 }
 
+async function getTranslations(req,res) {
+  try {
+    const apiResponse = await fetch(`https://www.dictionaryapi.com/api/v3/references/spanish/json/${req.query.query}?key=${process.env.TRANSLATION_API_KEY}`)
+    const translationData = await apiResponse.json()
+    return res.json(translationData)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+}
+
 export {
   create,
   index,
   show,
   deleteWord as delete,
+  getTranslations,
 }
