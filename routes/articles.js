@@ -11,7 +11,11 @@ const router = Router()
 router.use(decodeUserFromToken)
 
 //localhost:3001/api/articles
-router.get('/',  articlesCtrl.index)  //checkAuth removed -----remember to add back once front end is built
-router.post('/', articlesCtrl.create) //checkAuth removed -----remember to add back once front end is built
+router.get('/', checkAuth, articlesCtrl.index)  
+router.get('/:articleId', checkAuth, articlesCtrl.show)
+router.post('/', checkAuth, articlesCtrl.create)
+router.post('/:articleId/comments', checkAuth, articlesCtrl.createComment)
+router.put('/:articleId/comments/:commentId', checkAuth, articlesCtrl.updateComment)
+router.delete('/:articleId/comments/:commentId', checkAuth, articlesCtrl.deleteComment)
 
 export { router }
