@@ -45,6 +45,7 @@ async function index(req,res) {
 async function show(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
+    .populate(['comments.author'])
     res.status(200).json(article)
   } catch(err) {
     console.log(err)
