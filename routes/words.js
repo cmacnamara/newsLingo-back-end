@@ -14,7 +14,7 @@ router.use(decodeUserFromToken)
 router.post('/', checkAuth, wordsCtrl.create)
 router.get('/', checkAuth, wordsCtrl.index)  
 router.get('/:wordId', checkAuth, wordsCtrl.show)
-router.get('/:wordId', checkAuth, wordsCtrl.delete)
+router.delete('/:wordId', checkAuth, wordsCtrl.delete)
 
 
 export { router }
