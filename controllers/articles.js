@@ -20,10 +20,10 @@ async function index(req,res) {
   try {
     //first check to see if any articles exist that were created with recent mongodb timestamp
     const sixteenHoursAgo = new Date()
-    sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 1)
+    sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 16)
   
     const articles = await Article.find({ createdAt: { $gte: sixteenHoursAgo} })
-      articles.length >= 100
+      articles.length >= 10
       //if yes, 
         /// are there at least 100 (10 for testing)?  if yes, index
         ? res.status(200).json(articles)
@@ -36,19 +36,16 @@ async function index(req,res) {
   }
 }
 
-// all new below this point
-
 async function show(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
-      //.populate('comments.author') 
     res.status(200).json(article)
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
   }
 }
-async function createComment(req, res) { //untested.... don't have req.body
+async function createComment(req, res) {
   try {
     req.body.author = req.user.profile
     const article = await Article.findById(req.params.articleId)
@@ -83,15 +80,6 @@ async function deleteComment(req, res) {
     res.status(500).json(err)
   }
 }
-async function createFavoriteWord(req, res) {
-  try {
-    const xxxx = await 
-    res.status.json(article)
-  } catch(err) {
-    console.log(err)
-    res.status(500).json(err)
-  }
-}
 
 
 export {
@@ -99,4 +87,6 @@ export {
   create,
   show,
   createComment,
+  updateComment,
+  deleteComment,
 }
