@@ -71,8 +71,11 @@ async function createComment(req, res) {
 }
 async function updateComment(req, res) {
   try {
-    const xxxx = await 
-    res.status.json(article)
+    const article = await Article.findById(req.params.articleId)
+    const comment = article.comments.id(req.params.commentId)
+    comment.text = req.body.text
+    await article.save()
+    res.status(200).json(article)
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -80,8 +83,10 @@ async function updateComment(req, res) {
 }
 async function deleteComment(req, res) {
   try {
-    const xxxx = await 
-    res.status.json(article)
+    const article = await Article.findById(req.params.articleId)
+    article.comments.remove({ _id: req.params.commentId})
+    await article.save()
+    res.status(200).json(article)
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
