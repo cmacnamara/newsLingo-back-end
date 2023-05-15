@@ -21,10 +21,10 @@ async function create(req, res) {
 
 async function index(req, res) {
   try {
-    const words = await Word.find({})
-      // .populate('favoritor') //do we want to add this to the word model?  need to track who favorited the word for any reason?
-      .sort({ createdAt: 'desc' })
-      res.status(200).json(words)
+    const user = await Profile.findById(req.user.profile)
+      .populate("dictionary")
+      const dictionary = user.dictionary
+      res.status(200).json(dictionary)
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
