@@ -54,6 +54,11 @@ const articleSchema = new Schema(
       // required: true,
       default: '' 
     },
+    country: { 
+      type: [String],
+      // required: true,
+      default: '' 
+    },
     comments: [commentSchema]
   },
   { timestamps: true }
