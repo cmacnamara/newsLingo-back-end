@@ -6,7 +6,7 @@ async function create(req,res) {
   try {
     let filteredArticles =[]
     let nextPage=''
-    for (let i=0; i<3; i++){
+    for (let i=0; i<10; i++){
       const apiResponse = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEWS_API_KEY}&language=es&page=${nextPage}`)
 
       console.log("api response: ", apiResponse);
@@ -15,7 +15,7 @@ async function create(req,res) {
 
       //Filter response with only articles that have a creator and image
       const newArray= (articleData.results.filter(article => (
-        article.creator && article.image_url)
+        article.creator && article.image_url && article.content)
       ))
       filteredArticles= [...filteredArticles, ...newArray]
 
