@@ -1,1 +1,1 @@
-# NewsLingo - Back End
+Go [here](https://github.com/cmacnamara/newsLingo-front-end) for more details on NewsLingo.
