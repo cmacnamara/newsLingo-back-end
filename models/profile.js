@@ -8,7 +8,6 @@ const profileSchema = new Schema({
   preferredLanguage: {
     type: String,
     default: 'spanish',
-    // required: true,
   },
   dictionary: [{ 
     type: Schema.Types.ObjectId, 

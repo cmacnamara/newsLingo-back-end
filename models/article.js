@@ -5,8 +5,7 @@ const Schema = mongoose.Schema
 const commentSchema = new Schema(
   {
     text: {
-      type: String,
-      // required: true
+      type: String
     },
     author: { type: Schema.Types.ObjectId, ref: 'Profile' }
   },
@@ -16,47 +15,38 @@ const commentSchema = new Schema(
 const articleSchema = new Schema(
   {
     title: {
-      type: String,
-      // required: true,
+      type: String
     },
     creator: {
       type: [String],
-      // required: true,
       default: ''
     },
     description: {
       type: String,
-      // required: true,
       default: ''
     },
     content: {
       type: String,
-      // required: true,
       default: ''
     },
     pubDate: { 
       type: String,
-      // required: true,
       default: '' 
     },
     category: { 
       type: [String],
-      // required: true,
       default: '' 
     },
     language: { 
       type: String,
-      // required: true,
       default: '' 
     },
     image_url: { 
       type: String,
-      // required: true,
       default: '' 
     },
     country: { 
       type: [String],
-      // required: true,
       default: '' 
     },
     comments: [commentSchema]

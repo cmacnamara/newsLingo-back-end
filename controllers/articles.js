@@ -8,24 +8,18 @@ async function create(req,res) {
     let nextPage=''
     for (let i=0; i<10; i++){
       const apiResponse = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEWS_API_KEY}&language=es&page=${nextPage}`)
-
-      console.log("api response: ", apiResponse);
       const articleData = await apiResponse.json()
-      console.log('articleData ', articleData);
 
-      //Filter response with only articles that have a creator and image
+      //Filter response with only articles that have required data attributes: creator, image, content
       const newArray= (articleData.results.filter(article => (
         article.creator && article.image_url && article.content)
       ))
       filteredArticles= [...filteredArticles, ...newArray]
-
       nextPage= articleData.nextPage
     }
-    console.log('Filtered articles', filteredArticles);
-    // const articles = await Article.create(filteredArticles.filter((article, idx) => idx < 20))
+
     const articles = await Article.create(filteredArticles)
     res.status(200).json(articles)
-
 
   } catch (error) {
     console.log(error);
@@ -35,16 +29,12 @@ async function create(req,res) {
 
 async function index(req,res) {
   try {
-    //first check to see if any articles exist that were created with recent mongodb timestamp
     const sixteenHoursAgo = new Date()
     sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 16)
-  
+    
     const articles = await Article.find({ createdAt: { $gte: sixteenHoursAgo} })
       articles.length >= 30
-      //if yes, 
-        /// are there at least 100 (10 for testing)?  if yes, index
         ? res.status(200).json(articles)
-        //if no call create
         : create(req, res)
       } 
   catch (error) {
@@ -63,18 +53,22 @@ async function show(req, res) {
     res.status(500).json(err)
   }
 }
+
 async function createComment(req, res) {
   try {
     req.body.author = req.user.profile
+
     const article = await Article.findById(req.params.articleId)
     article.comments.push(req.body) 
     await article.save()
-
+    
     const newComment = article.comments[article.comments.length - 1]
-    console.log(newComment);
+    console.log(newComment) 
+    
     const profile = await Profile.findById(req.user.profile)
     newComment.author = profile
     res.status(201).json(newComment)
+  
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -83,10 +77,12 @@ async function createComment(req, res) {
 async function updateComment(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
+ 
     const comment = article.comments.id(req.params.commentId)
     comment.text = req.body.text
     await article.save()
     res.status(200).json(article)
+ 
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -98,6 +94,7 @@ async function deleteComment(req, res) {
     article.comments.remove({ _id: req.params.commentId})
     await article.save()
     res.status(200).json(article)
+ 
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
