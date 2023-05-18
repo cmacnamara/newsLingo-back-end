@@ -15,7 +15,6 @@ async function create(req,res) {
         article.creator && article.image_url && article.content)
       ))
       filteredArticles= [...filteredArticles, ...newArray]
-
       nextPage= articleData.nextPage
     }
 
@@ -30,10 +29,9 @@ async function create(req,res) {
 
 async function index(req,res) {
   try {
-    //first check to see if any articles exist in the database that were created with a recent mongodb timestamp
     const sixteenHoursAgo = new Date()
     sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 16)
-  
+    
     const articles = await Article.find({ createdAt: { $gte: sixteenHoursAgo} })
       articles.length >= 30
         ? res.status(200).json(articles)
