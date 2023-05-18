@@ -37,6 +37,7 @@ async function index(req,res) {
         ? res.status(200).json(articles)
         : create(req, res)
       } 
+
   catch (error) {
     console.log(error)
     res.status(500).json(error)
@@ -48,6 +49,7 @@ async function show(req, res) {
     const article = await Article.findById(req.params.articleId)
     .populate(['comments.author'])
     res.status(200).json(article)
+
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -76,24 +78,25 @@ async function createComment(req, res) {
 async function updateComment(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
- 
+
     const comment = article.comments.id(req.params.commentId)
     comment.text = req.body.text
     await article.save()
     res.status(200).json(article)
- 
+
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
   }
 }
+
 async function deleteComment(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
     article.comments.remove({ _id: req.params.commentId})
     await article.save()
     res.status(200).json(article)
- 
+
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
