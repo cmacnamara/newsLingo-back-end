@@ -63,7 +63,6 @@ async function createComment(req, res) {
     await article.save()
     
     const newComment = article.comments[article.comments.length - 1]
-    console.log(newComment) 
     
     const profile = await Profile.findById(req.user.profile)
     newComment.author = profile
