@@ -12,7 +12,7 @@ async function create(req,res) {
 
       //Filter response with only articles that have required data attributes: creator, image, content
       const newArray= (articleData.results.filter(article => (
-        article.creator && article.image_url && article.content)
+        article.creator && article.content)
       ))
       filteredArticles= [...filteredArticles, ...newArray]
       nextPage= articleData.nextPage
