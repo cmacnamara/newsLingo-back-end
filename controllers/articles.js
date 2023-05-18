@@ -22,7 +22,8 @@ async function create(req,res) {
       nextPage= articleData.nextPage
     }
     console.log('Filtered articles', filteredArticles);
-    const articles = await Article.create(filteredArticles.filter((article, idx) => idx < 20))
+    // const articles = await Article.create(filteredArticles.filter((article, idx) => idx < 20))
+    const articles = await Article.create(filteredArticles)
     res.status(200).json(articles)
 
 
@@ -39,7 +40,7 @@ async function index(req,res) {
     sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 16)
   
     const articles = await Article.find({ createdAt: { $gte: sixteenHoursAgo} })
-      articles.length >= 10
+      articles.length >= 30
       //if yes, 
         /// are there at least 100 (10 for testing)?  if yes, index
         ? res.status(200).json(articles)
