@@ -1,7 +1,6 @@
 import { Word } from "../models/word.js"
 import { Profile } from "../models/profile.js"
 
-
 async function create(req, res) {
   try {
     req.body.favoritor = req.user.profile 
@@ -23,8 +22,8 @@ async function index(req, res) {
   try {
     const user = await Profile.findById(req.user.profile)
       .populate("dictionary")
-      const dictionary = user.dictionary
-      res.status(200).json(dictionary)
+    const dictionary = user.dictionary
+    res.status(200).json(dictionary)
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
@@ -48,9 +47,9 @@ async function deleteWord(req, res) {
     profile.dictionary.remove({ _id: word._id }) 
     await profile.save()
     res.status(200).json(word)
-  } catch (error) {
-    console.log(error)
-    res.status(500).json(error)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
   }
 }
 
@@ -59,9 +58,9 @@ async function getTranslations(req,res) {
     const apiResponse = await fetch(`https://www.dictionaryapi.com/api/v3/references/spanish/json/${req.query.query}?key=${process.env.TRANSLATION_API_KEY}`)
     const translationData = await apiResponse.json()
     return res.json(translationData)
-  } catch (error) {
-    console.log(error)
-    res.status(500).json(error)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
   }
 }
 
