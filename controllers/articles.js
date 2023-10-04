@@ -7,8 +7,9 @@ async function create(req,res) {
     let filteredArticles =[]
     let nextPage=''
     for (let i=0; i<10; i++){
-      const apiResponse = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEWS_API_KEY}&language=es&page=${nextPage}`)
+      const apiResponse = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEWS_API_KEY}&language=es${nextPage !== '' ? '&page=' + nextPage : ''}`)
       const articleData = await apiResponse.json()
+      console.log("DATA", articleData);
 
       //Filter response with only articles that have required data attributes: creator, image, content
       const newArray= (articleData.results.filter(article => (
