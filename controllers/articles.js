@@ -30,15 +30,14 @@ async function create(req,res) {
 
 async function index(req,res) {
   try {
-    const sixteenHoursAgo = new Date()
-    sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 16)
+    const articles = await Article.find({ createdAt: { $lt: new Date("2023-11-23T00:00:00.000Z")} })
+    .sort({ createdAt: 'desc' })
     
-    const articles = await Article.find({ createdAt: { $gte: sixteenHoursAgo} })
-      articles.length >= 30
-        ? res.status(200).json(articles)
-        : create(req, res)
-      } 
+  
 
+
+    res.status(200).json(articles)
+  } 
   catch (error) {
     console.log(error)
     res.status(500).json(error)
@@ -107,9 +106,11 @@ async function deleteComment(req, res) {
 
 export {
   index,
-  create,
+  // create,
   show,
   createComment,
   updateComment,
   deleteComment,
 }
+
+//database has 1400 articles with full content up until 2023-11-22 (pubdate & createdAt date)
