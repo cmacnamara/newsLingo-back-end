@@ -22,9 +22,9 @@ async function create(req,res) {
     const articles = await Article.create(filteredArticles)
     res.status(200).json(articles)
 
-  } catch (error) {
-    console.log(error);
-    res.json(error)
+  } catch (err) {
+    console.log(err)
+    res.json(err)
   }
 }
 
@@ -34,14 +34,13 @@ async function index(req,res) {
     sixteenHoursAgo.setHours(sixteenHoursAgo.getHours() - 16)
     
     const articles = await Article.find({ createdAt: { $gte: sixteenHoursAgo} })
-      articles.length >= 30
-        ? res.status(200).json(articles)
-        : create(req, res)
-      } 
-
-  catch (error) {
-    console.log(error)
-    res.status(500).json(error)
+    articles.length >= 30
+      ? res.status(200).json(articles)
+      : create(req, res)
+  
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
   }
 }
 
@@ -94,7 +93,7 @@ async function updateComment(req, res) {
 async function deleteComment(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
-    article.comments.remove({ _id: req.params.commentId})
+    article.comments.remove({ _id: req.params.commentId })
     await article.save()
     res.status(200).json(article)
 
@@ -103,7 +102,6 @@ async function deleteComment(req, res) {
     res.status(500).json(err)
   }
 }
-
 
 export {
   index,
