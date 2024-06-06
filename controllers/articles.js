@@ -105,6 +105,17 @@ async function checkForValidImages(req, res) {
   let results = { validImages: 0, brokenImages: 0}
   let invalidURLs = []
   let nonImageURLs = []
+  let updatedArticles = []
+  async function removeArticleURL(articleId) {
+    try {
+      const article = await Article.findById(articleId)
+      article.image_url = null
+      article.save()
+      updatedArticles.push(articleId)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   try {
     const articles = await Article.find({ image_url: { $ne: null }})
     for(let article of articles) {
@@ -112,40 +123,29 @@ async function checkForValidImages(req, res) {
         const response = await axios.head(article.image_url)
         const contentType = response.headers['content-type']
         if(contentType.startsWith('image/')) {
-          console.log('this is a valid image')
+          console.log(`${article._id} contains a valid image`)
           results['validImages']++ 
           console.log(results['validImages'])
         } else {
-          console.log('this URL does not return an image')
+          console.log(`${article._id} contains a URL that does not return an image`)
           results['brokenImages']++
           nonImageURLs.push(article.image_url)
-          
+          removeArticleURL(article._id)
         }
       } catch (err) {
-        console.log('an error occured while checking that URL')
+        console.log(`${article._id}: an error occured while checking that URL`)
         results['brokenImages']++
         invalidURLs.push(article.image_url)
+        removeArticleURL(article._id)
       }
     }
-    res.status(200).json({ results, invalidURLs, nonImageURLs})
+    res.status(200).json({ results, invalidURLs, nonImageURLs, updatedArticles })
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
   }
 }
 
-async function removeArticleURL(req, res) {
-  try {
-    const article = await Article.findById(req.params.articleId)
-    // console.log(article.image_url)
-    article.image_url = null
-    // console.log(`the image url is now ${article.image_url}`)
-    article.save()
-    res.status(200).json(article)
-  } catch (err) {
-    console.log(err)
-  }
-}
 
 export {
   index,
@@ -155,7 +155,7 @@ export {
   updateComment,
   deleteComment,
   checkForValidImages,
-  removeArticleURL
+
 }
 
 //database has 1400 articles with full content up until 2023-11-22 (pubdate & createdAt date)
