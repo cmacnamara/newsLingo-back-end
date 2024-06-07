@@ -20,7 +20,6 @@ async function show(req, res) {
     const article = await Article.findById(req.params.articleId)
     .populate(['comments.author'])
     res.status(200).json(article)
-    
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -30,17 +29,13 @@ async function show(req, res) {
 async function createComment(req, res) {
   try {
     req.body.author = req.user.profile
-    
     const article = await Article.findById(req.params.articleId)
     article.comments.push(req.body) 
     await article.save()
-    
     const newComment = article.comments[article.comments.length - 1]
-    
     const profile = await Profile.findById(req.user.profile)
     newComment.author = profile
     res.status(201).json(newComment)
-    
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -50,12 +45,10 @@ async function createComment(req, res) {
 async function updateComment(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
-    
     const comment = article.comments.id(req.params.commentId)
     comment.text = req.body.text
     await article.save()
     res.status(200).json(article)
-    
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
@@ -68,11 +61,9 @@ async function deleteComment(req, res) {
     article.comments.remove({ _id: req.params.commentId })
     await article.save()
     res.status(200).json(article)
-    
   } catch(err) {
     console.log(err)
     res.status(500).json(err)
-    
   }
 }
 
