@@ -65,7 +65,7 @@ async function updateComment(req, res) {
 async function deleteComment(req, res) {
   try {
     const article = await Article.findById(req.params.articleId)
-    article.comments.remove({ _id: req.params.commentId})
+    article.comments.remove({ _id: req.params.commentId })
     await article.save()
     res.status(200).json(article)
     
