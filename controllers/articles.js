@@ -112,6 +112,35 @@ async function checkForValidImages(req, res) {
   }
 }
 
+// helper function
+
+function randomize() {
+//push all of article IDs to an object with category-specific arrays
+  const categorizedArticles = {}
+  const todaysNews = {}
+  const todaysNewsArr = []
+  articles.forEach(a => {
+    categorizedArticles[a.category[0]] ? categorizedArticles[a.category[0]].push(a._id) : categorizedArticles[a.category[0]] = [a._id] 
+  })
+//run a loop on each array to randomly select 4 articles IDs in categores with more than 4 articles
+  for(let key in categorizedArticles) {
+    if(categorizedArticles[key].length > 4) {
+      todaysNews[key] = []
+      while(todaysNews[key].length < 4) {
+        const randomIdx = Math.floor(Math.random()*categorizedArticles[key].length)
+        if(todaysNews[key].includes(categorizedArticles[key][randomIdx])) continue
+        else {
+          todaysNews[key].push(categorizedArticles[key][randomIdx])
+          todaysNewsArr.push(categorizedArticles[key][randomIdx])
+        }
+      }
+    }
+  }
+  console.log(todaysNews)    
+  console.log(todaysNewsArr)
+      //push those article IDs -- somewhere?? new resources?
+}
+
 export {
   index,
   show,
