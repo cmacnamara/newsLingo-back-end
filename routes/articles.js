@@ -12,6 +12,7 @@ router.use(decodeUserFromToken)
 
 //localhost:3001/api/articles
 router.get('/', checkAuth, articlesCtrl.index)  
+router.get('/randomize', articlesCtrl.randomize)
 router.get('/checkforvalidimages', articlesCtrl.checkForValidImages)
 router.get('/:articleId', checkAuth, articlesCtrl.show)
 router.post('/:articleId/comments', checkAuth, articlesCtrl.createComment)

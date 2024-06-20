@@ -1,12 +1,15 @@
 import { Article } from "../models/article.js"
 import { Profile } from "../models/profile.js"
+import { DailyIndex } from "../models/DailyIndex.js"
 
 import axios from "axios"
 
 async function index(req,res) {
   try {
-    const articles = await Article.find({ createdAt: { $lt: new Date("2023-11-23T00:00:00.000Z")} })
-    .sort({ createdAt: 'desc' })
+    const articles = await Article.find({ image_url: { $ne: null },
+      createdAt: { $lt: new Date("2023-11-23T00:00:00.000Z")}
+})
+    // .sort({ createdAt: 'desc' })
     res.status(200).json(articles)
   } 
   catch (err) {
@@ -83,7 +86,9 @@ async function checkForValidImages(req, res) {
     }
   }
   try {
-    const articles = await Article.find({ image_url: { $ne: null }})
+    const articles = await Article.find({ image_url: { $ne: null },
+          createdAt: { $lt: new Date("2023-11-23T00:00:00.000Z")}
+    })
     for(let article of articles) {
       try {
         const response = await axios.head(article.image_url)
@@ -114,31 +119,38 @@ async function checkForValidImages(req, res) {
 
 // helper function
 
-function randomize() {
-//push all of article IDs to an object with category-specific arrays
-  const categorizedArticles = {}
-  const todaysNews = {}
-  const todaysNewsArr = []
-  articles.forEach(a => {
-    categorizedArticles[a.category[0]] ? categorizedArticles[a.category[0]].push(a._id) : categorizedArticles[a.category[0]] = [a._id] 
-  })
-//run a loop on each array to randomly select 4 articles IDs in categores with more than 4 articles
-  for(let key in categorizedArticles) {
-    if(categorizedArticles[key].length > 4) {
-      todaysNews[key] = []
-      while(todaysNews[key].length < 4) {
-        const randomIdx = Math.floor(Math.random()*categorizedArticles[key].length)
-        if(todaysNews[key].includes(categorizedArticles[key][randomIdx])) continue
-        else {
-          todaysNews[key].push(categorizedArticles[key][randomIdx])
-          todaysNewsArr.push(categorizedArticles[key][randomIdx])
+async function randomize(req, res) {
+  try {
+    const articles = await Article.find({ image_url: { $ne: null }})
+    //push all of article IDs to an object with category-specific arrays
+    const categorizedArticles = {}
+    const todaysNews = {}
+    const todaysNewsArr = []
+    articles.forEach(a => {
+      categorizedArticles[a.category[0]] ? categorizedArticles[a.category[0]].push(a._id) : categorizedArticles[a.category[0]] = [a._id] 
+    })
+    //run a loop on each array to randomly select 4 articles IDs in categores with more than 4 articles
+    for(let key in categorizedArticles) {
+        if(categorizedArticles[key].length > 4) {
+          todaysNews[key] = []
+          while(todaysNews[key].length < 4) {
+            const randomIdx = Math.floor(Math.random()*categorizedArticles[key].length)
+            if(todaysNews[key].includes(categorizedArticles[key][randomIdx])) continue
+            else {
+              todaysNews[key].push(categorizedArticles[key][randomIdx])
+              todaysNewsArr.push(categorizedArticles[key][randomIdx])
+            }
+          }
         }
       }
-    }
+      console.log(todaysNews)    
+      console.log(todaysNewsArr)
+          //push those article IDs -- somewhere?? new resources?
+    DailyIndex.create({ todaysNews, todaysNewsArr })
+    res.status(200).json( { todaysNews, todaysNewsArr })
+  } catch (err) {
+    res.status(500).json(err)
   }
-  console.log(todaysNews)    
-  console.log(todaysNewsArr)
-      //push those article IDs -- somewhere?? new resources?
 }
 
 export {
@@ -148,4 +160,5 @@ export {
   updateComment,
   deleteComment,
   checkForValidImages,
+  randomize,
 }
